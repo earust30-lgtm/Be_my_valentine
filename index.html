@@ -36,6 +36,7 @@ h1 {
 /* BUTTONS */
 .buttons {
   position: relative;
+  height: 100px;
 }
 
 button {
@@ -47,7 +48,7 @@ button {
   color: white;
   cursor: pointer;
   margin: 15px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, left 0.3s, top 0.3s;
 }
 
 button:hover {
@@ -74,76 +75,4 @@ audio {
 <div class="buttons">
   <button id="yesBtn" onclick="yesClicked()">Yes</button>
   <button id="noBtn">No</button>
-</div>
-
-<audio id="music" loop>
-  <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-/* FLOATING HEARTS */
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.style.position = "absolute";
-  heart.style.fontSize = (Math.random() * 20 + 20) + "px";
-  heart.style.left = Math.random() * window.innerWidth + "px";
-  heart.style.bottom = "-50px";
-  heart.style.opacity = 0.8;
-  heart.innerHTML = "❤️";
-  heart.style.transition = "transform 4s linear, opacity 4s linear";
-  document.body.appendChild(heart);
-  setTimeout(() => {
-    heart.style.transform = `translateY(-${window.innerHeight + 50}px)`;
-    heart.style.opacity = 0;
-  }, 50);
-  setTimeout(() => heart.remove(), 4000);
-}
-setInterval(createHeart, 300);
-
-/* NO BUTTON PROGRESSION */
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const noTexts = [
-  "Are you sure?",
-  "Are you sure you're sure?",
-  "Babe pleaseeeeee",
-  "Just say yes babe",
-  "You better say yes",
-  "Last chance",
-  "Last chance"
-];
-let noIndex = 0;
-let yesSize = 1;
-
-noBtn.addEventListener("click", () => {
-  if (noIndex < noTexts.length - 1) {
-    noIndex++;
-  }
-  noBtn.textContent = noTexts[noIndex];
-  yesSize += 0.05;
-  yesBtn.style.transform = `scale(${yesSize})`;
-});
-
-noBtn.addEventListener("mouseover", () => {
-  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-});
-
-/* YES BUTTON CLICK */
-function yesClicked() {
-  // Play music
-  document.getElementById("music").play();
-
-  // Replace minion GIF with fireworks GIF
-  const minion = document.getElementById("minionGif");
-  minion.src = "fireworks-exploding-heart.gif";
-
-  // Replace buttons with celebration text
-  document.querySelector(".buttons").innerHTML = "<h2>YAYY! I LOVE YOU &lt;3</h2>";
-}
-
-</script>
-</body>
-</html>
+</div
