@@ -103,11 +103,15 @@ let noIndex = 0;
 let yesSize = 1;
 
 noBtn.addEventListener("click", () => {
-  if (noIndex < noTexts.length - 1) noIndex++;
+  // Show current text
   noBtn.textContent = noTexts[noIndex];
 
+  // Increase Yes button slightly
   yesSize += 0.05;
   yesBtn.style.transform = `scale(${yesSize})`;
+
+  // Prepare next text for the next click
+  if (noIndex < noTexts.length - 1) noIndex++;
 });
 
 // Yes button click
