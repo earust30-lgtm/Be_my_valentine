@@ -19,24 +19,16 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* MINION GIF */
 .minion-gif {
   width: 200px;
   height: auto;
   margin: 0 auto 30px;
+  display: block;
 }
 
-/* FIREWORK GIF */
-.firework-gif {
-  width: 250px;
-  height: auto;
-  margin: 20px auto 10px;
-}
-
-/* BUTTONS */
 .buttons {
   position: relative;
-  height: 100px;
+  height: 150px;
 }
 
 button {
@@ -59,13 +51,11 @@ button:hover {
   position: absolute;
 }
 
-/* MUSIC (hidden controls) */
 audio {
   display: none;
 }
 </style>
 </head>
-
 <body>
 
 <h1>Will you be my Valentine? 💘</h1>
@@ -73,6 +63,77 @@ audio {
 <img src="minionlove.gif" alt="Minion Love" class="minion-gif" id="minionGif">
 
 <div class="buttons">
-  <button id="yesBtn" onclick="yesClicked()">Yes</button>
+  <button id="yesBtn">Yes</button>
   <button id="noBtn">No</button>
-</div
+</div>
+
+<audio id="music" loop>
+  <source src="romantic-music.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+// Floating hearts
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.style.position = "absolute";
+  heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.bottom = "-50px";
+  heart.style.opacity = 0.8;
+  heart.innerHTML = "❤️";
+  heart.style.transition = "transform 4s linear, opacity 4s linear";
+  document.body.appendChild(heart);
+  setTimeout(() => {
+    heart.style.transform = `translateY(-${window.innerHeight + 50}px)`;
+    heart.style.opacity = 0;
+  }, 50);
+  setTimeout(() => heart.remove(), 4000);
+}
+setInterval(createHeart, 300);
+
+// No button progression
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const noTexts = [
+  "Are you sure?",
+  "Are you sure you're sure?",
+  "Babe pleaseeeeee",
+  "Just say yes babe",
+  "You better say yes",
+  "Last chance",
+  "Last chance"
+];
+let noIndex = 0;
+let yesSize = 1;
+
+noBtn.addEventListener("click", () => {
+  if (noIndex < noTexts.length - 1) noIndex++;
+  noBtn.textContent = noTexts[noIndex];
+
+  yesSize += 0.05;
+  yesBtn.style.transform = `scale(${yesSize})`;
+
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
+
+// Yes button click
+yesBtn.addEventListener("click", () => {
+  const music = document.getElementById("music");
+  music.play().catch(e => console.log("Music play blocked:", e));
+
+  const minion = document.getElementById("minionGif");
+  minion.src = "fireworks-exploding-heart.gif";
+
+  const buttonsDiv = document.querySelector(".buttons");
+  buttonsDiv.innerHTML = "<h2>YAYY! I LOVE YOU &lt;3</h2>";
+});
+</script>
+
+</body>
+</html>
