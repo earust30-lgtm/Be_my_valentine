@@ -5,109 +5,62 @@
 <title>Be My Valentine?</title>
 
 <style>
-body{
-  margin:0;
-  background:#fff4f6;
-  font-family:Arial, sans-serif;
-  text-align:center;
-  overflow:hidden;
-  padding-top:60px;
+body {
+  margin: 0;
+  background: #fff4f6;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  overflow: hidden;
+  padding-top: 60px;
 }
 
-h1{
-  font-size:2.6rem;
+h1 {
+  font-size: 2.6rem;
+  margin-bottom: 20px;
 }
 
-/* FLOATING HEARTS BACKGROUND */
-.bg-heart{
-  position:absolute;
-  bottom:-20px;
-  font-size:20px;
-  animation: floatUp linear infinite;
-  opacity:.8;
+/* MINION GIF */
+.minion-gif {
+  width: 200px;
+  height: auto;
+  margin: 0 auto 30px;
 }
 
-@keyframes floatUp{
-  from{ transform:translateY(0); }
-  to{ transform:translateY(-110vh); }
-}
-
-/* MINION */
-.minion{
-  width:140px;
-  height:180px;
-  background:#ffd43b;
-  border-radius:20px;
-  margin:0 auto 30px;
-  position:relative;
-}
-
-.eye{
-  width:45px;
-  height:45px;
-  background:white;
-  border-radius:50%;
-  position:absolute;
-  top:35px;
-  border:5px solid gray;
-}
-
-.eye.left{ left:25px;}
-.eye.right{ right:25px;}
-
-.pupil{
-  width:15px;
-  height:15px;
-  background:black;
-  border-radius:50%;
-  margin:15px auto;
-}
-
-.heart{
-  position:absolute;
-  bottom:-25px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:32px;
+/* FIREWORK GIF */
+.firework-gif {
+  width: 250px;
+  height: auto;
+  margin: 20px auto 10px;
 }
 
 /* BUTTONS */
-.buttons{
-  position:relative;
+.buttons {
+  position: relative;
 }
 
-button{
-  padding:12px 26px;
-  font-size:1.2rem;
-  border:none;
-  border-radius:10px;
-  background:#ff4b5c;
-  color:white;
-  cursor:pointer;
-  margin:15px;
+button {
+  padding: 12px 26px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px;
+  background: #ff4b5c;
+  color: white;
+  cursor: pointer;
+  margin: 15px;
+  transition: transform 0.2s;
 }
 
-button:hover{
-  background:#ff2a3a;
+button:hover {
+  background: #ff2a3a;
 }
 
-#noBtn{
-  position:absolute;
+#noBtn {
+  position: absolute;
 }
 
-/* FIREWORK HEARTS */
-.firework{
-  position:absolute;
-  font-size:22px;
-  animation: explode 1.8s ease-out forwards;
-}
-
-@keyframes explode{
-  from{ transform:scale(.5); opacity:1;}
-  to{
-    transform:translate(var(--x),var(--y)) scale(1.5);
-    opacity:0;
-  }
+/* MUSIC (hidden controls) */
+audio {
+  display: none;
 }
 </style>
 </head>
@@ -116,65 +69,81 @@ button:hover{
 
 <h1>Will you be my Valentine? 💘</h1>
 
-<div class="minion">
-  <div class="eye left"><div class="pupil"></div></div>
-  <div class="eye right"><div class="pupil"></div></div>
-  <div class="heart">❤️</div>
-</div>
+<img src="minionlove.gif" alt="Minion Love" class="minion-gif" id="minionGif">
 
 <div class="buttons">
-  <button onclick="fireworks(); playMusic()">Yes</button>
+  <button id="yesBtn" onclick="yesClicked()">Yes</button>
   <button id="noBtn">No</button>
 </div>
 
-<!-- MUSIC (romantic instrumental – royalty free) -->
 <audio id="music" loop>
   <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 /* FLOATING HEARTS */
-function createHeart(){
+function createHeart() {
   const heart = document.createElement("div");
-  heart.className="bg-heart";
-  heart.innerHTML="❤️";
-  heart.style.left = Math.random()*100 + "vw";
-  heart.style.animationDuration = 4 + Math.random()*4 + "s";
+  heart.style.position = "absolute";
+  heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.bottom = "-50px";
+  heart.style.opacity = 0.8;
+  heart.innerHTML = "❤️";
+  heart.style.transition = "transform 4s linear, opacity 4s linear";
   document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(),8000);
+  setTimeout(() => {
+    heart.style.transform = `translateY(-${window.innerHeight + 50}px)`;
+    heart.style.opacity = 0;
+  }, 50);
+  setTimeout(() => heart.remove(), 4000);
 }
-setInterval(createHeart,300);
+setInterval(createHeart, 300);
 
-/* NO BUTTON RUN AWAY */
+/* NO BUTTON PROGRESSION */
 const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const noTexts = [
+  "Are you sure?",
+  "Are you sure you're sure?",
+  "Babe pleaseeeeee",
+  "Just say yes babe",
+  "You better say yes",
+  "Last chance",
+  "Last chance"
+];
+let noIndex = 0;
+let yesSize = 1;
 
-noBtn.addEventListener("mouseover", ()=>{
-  const x = Math.random()*(window.innerWidth-100);
-  const y = Math.random()*(window.innerHeight-100);
-  noBtn.style.left = x+"px";
-  noBtn.style.top = y+"px";
+noBtn.addEventListener("click", () => {
+  if (noIndex < noTexts.length - 1) {
+    noIndex++;
+  }
+  noBtn.textContent = noTexts[noIndex];
+  yesSize += 0.05;
+  yesBtn.style.transform = `scale(${yesSize})`;
 });
 
-/* FIREWORKS */
-function fireworks(){
-  for(let i=0;i<40;i++){
-    const heart=document.createElement("div");
-    heart.className="firework";
-    heart.innerHTML="❤️";
-    heart.style.left=window.innerWidth/2+"px";
-    heart.style.top=window.innerHeight/2+"px";
-    heart.style.setProperty("--x",(Math.random()*600-300)+"px");
-    heart.style.setProperty("--y",(Math.random()*-600)+"px");
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),1800);
-  }
-}
+noBtn.addEventListener("mouseover", () => {
+  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
 
-/* MUSIC */
-function playMusic(){
+/* YES BUTTON CLICK */
+function yesClicked() {
+  // Play music
   document.getElementById("music").play();
-}
-</script>
 
+  // Replace minion GIF with fireworks GIF
+  const minion = document.getElementById("minionGif");
+  minion.src = "fireworks-exploding-heart.gif";
+
+  // Replace buttons with celebration text
+  document.querySelector(".buttons").innerHTML = "<h2>YAYY! I LOVE YOU &lt;3</h2>";
+}
+
+</script>
 </body>
 </html>
