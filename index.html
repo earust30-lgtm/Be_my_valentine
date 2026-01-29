@@ -62,9 +62,14 @@ audio {
   <button id="noBtn">No</button>
 </div>
 
-<audio id="music" loop>
+<!-- Suspenseful music (page load) -->
+<audio id="suspenseMusic" loop autoplay>
+  <source src="suspense-music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Romantic music (Yes button) -->
+<audio id="romanticMusic" loop>
   <source src="romantic-music.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
 </audio>
 
 <script>
@@ -123,8 +128,40 @@ function createFloatingKiss() {
   const kiss = document.createElement("div");
   kiss.style.position = "absolute";
   kiss.style.fontSize = (Math.random() * 40 + 20) + "px";
-  kiss.style.left = Math.random() * wi*
+  kiss.style.left = Math.random() * window.innerWidth + "px";
+  kiss.style.bottom = "-50px";
+  kiss.style.opacity = 0.8;
+  kiss.innerHTML = "💋";
+  kiss.style.transition = "transform 6s linear, opacity 6s linear";
+  document.body.appendChild(kiss);
+  setTimeout(() => {
+    kiss.style.transform = `translateY(-${window.innerHeight + 50}px)`;
+    kiss.style.opacity = 0;
+  }, 50);
+  setTimeout(() => kiss.remove(), 6000);
+}
 
+// Yes button click
+yesBtn.addEventListener("click", () => {
+  // Stop suspenseful music and start romantic music
+  const suspenseMusic = document.getElementById("suspenseMusic");
+  const romanticMusic = document.getElementById("romanticMusic");
+  suspenseMusic.pause();
+  romanticMusic.play().catch(e => console.log("Music play blocked:", e));
+
+  // Change GIF to fireworks
+  const minion = document.getElementById("minionGif");
+  minion.src = "fireworks-exploding-heart.gif";
+
+  // Update text
+  const buttonsDiv = document.querySelector(".buttons");
+  buttonsDiv.innerHTML = `
+    <h2>YAYYY! I LOVE YOU &lt;3<br>I'll see you in Washington xoxo</h2>
+  `;
+
+  // Start floating kisses continuously
+  setInterval(createFloatingKiss, 300);
+});
 </script>
 
 </body>
